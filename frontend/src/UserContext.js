@@ -1,65 +1,79 @@
-import React, { createContext, useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { createContext, useState, useEffect } from "react";
+import axios from "axios";
 
 export const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-    const [flashMessage, setFlashMessage] = useState(null);
-    const [user, setUser] = useState(() => {
+  const [flashMessage, setFlashMessage] = useState(null);
+  const [user, setUser] = useState(() => {
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
-  }); 
+  });
 
-    // LOGIN VALIDATION
-    const handleLogin = async (email, pwd) => {
+  // LOGIN VALIDATION
+  const handleLogin = async (email, pwd) => {
     try {
-        const response = await axios.post("http://localhost:8000/login", { email, pwd });
+      const response = await axios.post(
+        "https://scissor-mbob.onrender.com/login",
+        { email, pwd }
+      );
 
-        if (response.status === 200) {
+      if (response.status === 200) {
         console.log("Success:", response.data);
         setUser(response.data.user);
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", JSON.stringify(response.data.user));
         setFlashMessage({
-            type: "success",
-            message: "Login Successful",
+          type: "success",
+          message: "Login Successful",
         });
 
         setTimeout(() => {
-            window.location.href = "/link-history";
+          window.location.href = "/link-history";
         }, 1000);
-        } else if (response.status === 400) {
+      } else if (response.status === 400) {
         console.log("Error:", response.data);
         setFlashMessage({ type: "error", message: "All fields are required!" });
-        } else {
+      } else {
         console.error("Error:", response.data);
-        setFlashMessage({ type: "error", message: "An unexpected error occurred. Please try again later." });
-        }
+        setFlashMessage({
+          type: "error",
+          message: "An unexpected error occurred. Please try again later.",
+        });
+      }
     } catch (error) {
-        console.error("Axios Error:", error);
+      console.error("Axios Error:", error);
 
-        if (error.response) {
+      if (error.response) {
         console.log("Response Data:", error.response.data);
-        setFlashMessage({ type: "error", message: error.response.data.detail || error.response.data.message });
-        } else if (error.request) {
+        setFlashMessage({
+          type: "error",
+          message: error.response.data.detail || error.response.data.message,
+        });
+      } else if (error.request) {
         console.error("Request Error:", error.request);
-        setFlashMessage({ type: "error", message: "No response received from the server. Please try again later." });
-        }
+        setFlashMessage({
+          type: "error",
+          message:
+            "No response received from the server. Please try again later.",
+        });
+      }
     }
-    };
-  
-    // LOGOUT 
-    const handleLogout = () => {
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
-      setUser(null);
-      window.location.href = "/";
-    };
-  
+  };
+
+  // LOGOUT
+  const handleLogout = () => {
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    setUser(null);
+    window.location.href = "/";
+  };
 
   return (
-    <UserContext.Provider value={{ user, setUser, flashMessage, handleLogin, handleLogout }}>
+    <UserContext.Provider
+      value={{ user, setUser, flashMessage, handleLogin, handleLogout }}
+    >
       {children}
     </UserContext.Provider>
   );
-}; 
+};

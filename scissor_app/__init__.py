@@ -11,7 +11,7 @@ app = FastAPI(title="Scissor", description="Brief is the new black. Generate a s
 origins = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
-    "https://scissor-io.vercel.app",
+    "https://scissor-teal.vercel.app",
 ]
 
 app.add_middleware(
