@@ -192,7 +192,7 @@ export const Shorten = () => {
                       Shortened URL: &emsp;
                       <span>
                         <Link
-                          to={`http://localhost:8000/${shortenedUrl}`}
+                          to={`https://scissor-mbob.onrender.com/${shortenedUrl}`}
                           target="_blank"
                         >
                           <Typography
