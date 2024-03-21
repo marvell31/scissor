@@ -169,7 +169,7 @@ export const Stats = () => {
                           Shortened URL: &emsp;
                           <span>
                             <Link
-                              to={`http:localhost:8000/${analytics.short_url}`}
+                              to={`https://scissor-mbob.onrender.com/${analytics.short_url}`}
                               target="_blank"
                             >
                               <Typography
